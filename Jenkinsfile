@@ -21,7 +21,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( registry, registryCredential ) {
+          docker.withRegistry( "http://nexus.sysdata.it:18000", registryCredential ) {
             dockerImage.push()
           }
         }

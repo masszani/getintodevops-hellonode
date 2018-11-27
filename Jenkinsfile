@@ -20,7 +20,7 @@ node {
          * docker build on the command line */
 
         /*app = docker.build("nexus.sysdata.it:18000/getintodevops-hellonode")*/
-        app = docker.build registry + “:$BUILD_NUMBER”
+        app = docker.build registry + ":$BUILD_NUMBER"
     }
 
    /* stage('Test image') {

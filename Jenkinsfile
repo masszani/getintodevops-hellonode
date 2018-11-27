@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = "https://nexus.sysdata.it:18000/getintodevops-hellonode"
+        registry = "nexus.sysdata.it:18000/getintodevops-hellonode"
         registryCredential = 'nexus-credentials'
         dockerImage = ''
     }

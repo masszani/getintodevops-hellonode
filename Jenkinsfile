@@ -1,4 +1,12 @@
 node {
+
+    environment {
+        registry = "https://nexus.sysdata.it:18000/getintodevops-hellonode"
+        registryCredential = 'nexus-credentials'
+    }
+    
+    agent any
+
     def app
 
     stage('Clone repository') {
@@ -11,7 +19,8 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("nexus.sysdata.it:18000/getintodevops-hellonode")
+        /*app = docker.build("nexus.sysdata.it:18000/getintodevops-hellonode")*/
+        app = docker.build registry + “:$BUILD_NUMBER”
     }
 
    /* stage('Test image') {
@@ -28,9 +37,12 @@ node {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://nexus.sysdata.it:18000', 'nexus-credentials') {
+        /*docker.withRegistry('https://nexus.sysdata.it:18000', 'nexus-credentials') {
             app.push("${env.BUILD_NUMBER}")
             /* app.push("latest") */
-        }
+       /* } */
+
+        docker.withRegistry( ‘’, registryCredential ) {
+            dockerImage.push()
     }
 }

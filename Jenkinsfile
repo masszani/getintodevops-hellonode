@@ -1,49 +1,31 @@
-node {
-
+pipeline {
     environment {
         registry = "https://nexus.sysdata.it:18000/getintodevops-hellonode"
         registryCredential = 'nexus-credentials'
+        dockerImage = ‘’
     }
-    
-    agent any
-
-    def app
-
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
+  agent any
+  stages {
+    stage(‘Cloning Git’) {
+      steps {
         checkout scm
+      }
     }
-
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-        /*app = docker.build("nexus.sysdata.it:18000/getintodevops-hellonode")*/
-        app = docker.build registry + ":$BUILD_NUMBER"
-    }
-
-   /* stage('Test image') {
-        /* We test our image with a simple smoke test:
-         * Run a curl inside the newly-build Docker image */
-
-     /*   app.inside {
-            sh 'curl http://localhost:8000 || exit 1'
+    stage(‘Building image’) {
+      steps{
+        script {
+          dockerImage = docker.build registry + “:$BUILD_NUMBER”
         }
-    }*/
-
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        /*docker.withRegistry('https://nexus.sysdata.it:18000', 'nexus-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            /* app.push("latest") */
-       /* } */
-
-        docker.withRegistry( ‘’, registryCredential ) {
-            dockerImage.push()
+      }
     }
-}
+    stage(‘Deploy Image’) {
+      steps{
+        script {
+          docker.withRegistry( ‘’, registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+  }
 }

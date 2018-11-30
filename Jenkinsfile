@@ -31,8 +31,13 @@ pipeline {
     }
 
     stage('Deploy K8S') {
-        sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
-        sh("kubectl --namespace=production apply -f K8S/")
+        steps {
+            container('kubectl') {
+                sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
+                sh("kubectl --namespace=production apply -f K8S/")
+            }
+        
+        }
     }
     
   }

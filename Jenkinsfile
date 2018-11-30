@@ -1,18 +1,24 @@
-def buildNum = ${env.BUILD_NUMBER}
+def buildNum = "${env.BUILD_NUMBER}"
 
 pipeline {
+
     environment {
         registry = "nexus.sysdata.it:18000/getintodevops-hellonode"
         registryCredential = 'nexus-credentials'
         dockerImage = ''
     }
-  agent any
+  
+    agent any
+
+
   stages {
+    
     stage('Cloning Git') {
       steps {
         checkout scm
       }
     }
+
     stage('Building image') {
       steps{
         script {
@@ -20,6 +26,7 @@ pipeline {
         }
       }
     }
+
     stage('Deploy Image') {
       steps{
         script {
@@ -36,7 +43,6 @@ pipeline {
                 sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
                 sh("kubectl --namespace=production apply -f K8S/")
             }
-        
         }
     }
     

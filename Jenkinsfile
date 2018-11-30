@@ -1,3 +1,5 @@
+def buildNum = ${env.BUILD_NUMBER}
+
 pipeline {
     environment {
         registry = "nexus.sysdata.it:18000/getintodevops-hellonode"
@@ -27,5 +29,11 @@ pipeline {
         }
       }
     }
+
+    stage('Deploy K8S') {
+        sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
+        sh("kubectl --namespace=production apply -f K8S/")
+    }
+    
   }
-}
+}min

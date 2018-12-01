@@ -39,10 +39,13 @@ pipeline {
 
     stage('Deploy K8S') {
         steps {
-            withKubeConfig([credentialsId:'kubeconfig']) {
+         /*   withKubeConfig([credentialsId:'kubeconfig']) {
                 sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
                 sh("kubectl --namespace=production apply -f K8S/")
-            }
+            } */
+          withCredentials([kueconfigContent:'kubeconfig']){
+            sh("kubectl get pod")
+          }
         }
     }
     

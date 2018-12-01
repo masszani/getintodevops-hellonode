@@ -43,7 +43,7 @@ pipeline {
                 sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
                 sh("kubectl --namespace=production apply -f K8S/")
             } */
-          withCredentials([kubeconfigContent(credentialsId: 'kubeconfig']){
+          withCredentials([kubeconfigContent(credentialsId: 'kubeconfig')]){
             sh("kubectl get pod")
           }
         }

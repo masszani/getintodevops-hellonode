@@ -42,7 +42,7 @@ pipeline {
           withCredentials([kubeconfigContent(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_CONTENT')]){
             sh '''echo "$KUBECONFIG_CONTENT" > kubeconfig && cat kubeconfig && rm kubeconfig'''
             sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yml")
-            sh("kubectl --namespace=production apply -f K8S/")
+            sh("kubectl apply -f K8S/")
           }
         }
     }

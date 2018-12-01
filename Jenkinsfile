@@ -39,7 +39,7 @@ pipeline {
 
     stage('Deploy K8S') {
         steps {
-            withKubeConfig([credentialsId:ke_sysdata-gcp_europe-west2-a_sysdata-k8s]) {
+            withKubeConfig([credentialsId:gke_sysdata-gcp_europe-west2-a_sysdata-k8s]) {
                 sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
                 sh("kubectl --namespace=production apply -f K8S/")
             }

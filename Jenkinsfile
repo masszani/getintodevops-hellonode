@@ -45,6 +45,7 @@ pipeline {
             } */
           withCredentials([kubeconfigContent(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_CONTENT')]){
             sh '''echo "$KUBECONFIG_CONTENT" > kubeconfig && cat kubeconfig && rm kubeconfig'''
+            sh "kubectl get pod"
           }
         }
     }

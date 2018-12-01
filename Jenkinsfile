@@ -30,7 +30,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( "http://nexus.sysdata.it:18000", ke_sysdata-gcp_europe-west2-a_sysdata-k8s ) {
+          docker.withRegistry( "http://nexus.sysdata.it:18000", registryCredential ) {
             dockerImage.push()
           }
         }
@@ -39,7 +39,7 @@ pipeline {
 
     stage('Deploy K8S') {
         steps {
-            withKubeConfig([credentialsId:kubeconfig]) {
+            withKubeConfig([credentialsId:ke_sysdata-gcp_europe-west2-a_sysdata-k8s]) {
                 sh("sed -i.bak 's#latest#${buildNum}#' ./K8S/*.yaml")
                 sh("kubectl --namespace=production apply -f K8S/")
             }
